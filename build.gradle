@@ -6,6 +6,24 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
 
+dependencies {
+    // JUnit 5
+    testImplementation 'org.junit.jupiter:junit-jupiter:6.0.3'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // RestAssured for API testing
+    testImplementation 'io.rest-assured:rest-assured:6.0.0'
+
+    // Allure
+    testImplementation 'io.qameta.allure:allure-junit5:2.33.0'
+    testImplementation 'io.qameta.allure:allure-rest-assured:2.33.0'
+
+    // Jackson for JSON processing
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.21.2'
+    testImplementation 'com.fasterxml.jackson.core:jackson-annotations:2.21.2'
+}
+
+test {
+    useJUnitPlatform()
 }
