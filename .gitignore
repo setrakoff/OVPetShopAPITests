@@ -33,3 +33,6 @@ build
 .gradle
 gradlew
 gradlew.bat
+
+#allure
+allure-results
