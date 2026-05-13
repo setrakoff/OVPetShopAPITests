@@ -92,12 +92,9 @@ public class TestPet {
         step("response.getStatusCode expected 200", () -> assertEquals(200, response.getStatusCode(),
                 "response.getStatusCode not matched with expected. Response: " + responseBody));
         step("Response pet parameters are correct", () -> {
-            assertEquals(pet.getId(), createdPet.getId(),
-                    "Id not matched with expected");
-            assertEquals(pet.getName(), createdPet.getName(),
-                    "Name not matched with expected");
-            assertEquals(pet.getStatus(), createdPet.getStatus(),
-                    "Status not matched with expected");
+            assertEquals(pet.getId(), createdPet.getId(), "Id not matched with expected");
+            assertEquals(pet.getName(), createdPet.getName(), "Name not matched with expected");
+            assertEquals(pet.getStatus(), createdPet.getStatus(), "Status not matched with expected");
         });
     }
 }
