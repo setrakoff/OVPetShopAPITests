@@ -6,6 +6,8 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import models.Pet;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
@@ -59,5 +61,43 @@ public class TestPet {
                 "response.getStatusCode not matched with expected. Response: " + responseBody));
         step("Response body expected 'Pet not found'", () -> assertEquals("Pet not found", responseBody,
                 "Error text not matched with expected. Response: " + responseBody));
+    }
+
+    @ParameterizedTest(name = "Add pet with status: {2}")
+    @CsvSource({
+            "200, Buddy, available, 200",
+            "201, Daddy, pending, 200",
+            "202, Paddy, sold, 200",
+            "203, Caddy, not born, 400",
+    })
+    @Feature("pet")
+    @Owner("olegs")
+    public void testAddNewPet(int id, String name, String status, int responseCode) {
+        Pet pet = new Pet();
+        pet.setId(id);
+        pet.setName(name);
+        pet.setStatus(status);
+
+        Response response = step("Send add query with new pet name", () ->
+                given()
+                        .contentType(ContentType.JSON)
+                        .header("Accept", "application/json")
+                        .body(pet)
+                        .when()
+                        .post(BASE_URL + "/pet")
+        );
+
+        String responseBody = response.getBody().asString();
+
+        step("response.getStatusCode expected " + responseCode, () -> assertEquals(responseCode, response.getStatusCode(),
+                "response.getStatusCode not matched with expected. Response: " + responseBody));
+        if (responseCode == 200) {
+            Pet createdPet = response.as(Pet.class);
+            step("Response pet parameters are correct", () -> {
+                assertEquals(pet.getId(), createdPet.getId(), "Id not matched with expected");
+                assertEquals(pet.getName(), createdPet.getName(), "Name not matched with expected");
+                assertEquals(pet.getStatus(), createdPet.getStatus(), "Status not matched with expected");
+            });
+        }
     }
 }
